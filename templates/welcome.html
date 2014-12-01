@@ -1,0 +1,14 @@
+{% extends "base.html %"}
+
+{%block content %}
+
+    <h1> Welcome to your blog! </h1>
+    <a href="/blog/form"> <h2>Write a blog post</h2> </a>
+    {% for post in posts %}
+
+        <h3> {{post.head}} </h3>
+        <p> {{post.body}} </p>
+
+    {% endfor %}
+
+{% endblock %}
