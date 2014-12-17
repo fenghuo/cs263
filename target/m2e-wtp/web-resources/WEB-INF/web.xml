@@ -37,5 +37,25 @@
 		<url-pattern>/worker</url-pattern>
 	</servlet-mapping>
 
-</web-app>
+	<servlet>
+		<servlet-name>Upload</servlet-name>
+		<servlet-class>cs263.cs263.Upload</servlet-class>
+	</servlet>
 
+	<servlet>
+		<servlet-name>Serve</servlet-name>
+		<servlet-class>cs263.cs263.Serve</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Upload</servlet-name>
+		<url-pattern>/upload</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Serve</servlet-name>
+		<url-pattern>/serve</url-pattern>
+	</servlet-mapping>
+
+
+</web-app>
