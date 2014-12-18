@@ -1,7 +1,7 @@
 var map;
 var trips = {};
 var tripids = [];
-var username = 23452;
+var username = 77;
 
 function initialize() {
 	var mapOptions = {
@@ -136,6 +136,8 @@ function draw2(id) {
 	});
 
 	flightPath.setMap(map);
+	if (flightPlanCoordinates.length > 0)
+		map.setCenter(flightPlanCoordinates[0]);
 }
 function draw(lat, lng, photo) {
 
@@ -156,6 +158,7 @@ function draw(lat, lng, photo) {
 		infowindow.open(map, marker);
 	});
 	marker.setMap(map);
+	map.setCenter(myLatlng);
 }
 function addLocation(lat, lng) {
 	$("#latitude").val(lat);
@@ -218,6 +221,11 @@ function getAddTrip(id) {
 }
 
 function addPlace() {
+	if (!($("#travelid").val()) || !($("#latitude").val())
+			|| !($("#longitude").val())) {
+		alert("Please fill in travel id and lat and longitude!");
+		return;
+	}
 	var pid = parseInt(Math.random() * 10000000);
 	if (isNaN($("#travelid").val())) {
 		alert("Travel Id Can only be Numbers");
@@ -236,6 +244,11 @@ function loadTrips() {
 			})
 			.done(
 					function(msg) {
+
+						if (msg == "FOB") {
+							window.location.replace("/login.html");
+							return;
+						}
 						ids = $.parseJSON(msg)
 						tripids = ids
 						for (var i = 0; i < ids.length; i++) {
@@ -249,6 +262,14 @@ function loadTrips() {
 
 function addPlaces(id) {
 	var places = trips[id];
+	var link = [];
+	for (var i = 0; i < places.length; i++) {
+		p = places[i];
+		link.push({
+			"lat" : p["lat"],
+			"lng" : p["lng"]
+		});
+	}
 	var content = '  <div class="panel panel-default"> \
 		    <div class="panel-heading" role="tab" id="headingThree">  \
 		      <h4 class="panel-title" onclick="draw2('
@@ -261,8 +282,8 @@ function addPlaces(id) {
 			+ id
 			+ '\
 		        </a> \
-			<a href="/share.html?place='
-			+ encodeURI(JSON.stringify(places))
+			<a target="_blank" href="/share.html?place='
+			+ encodeURI(JSON.stringify(link))
 			+ '">Share My Travel</a>\
 		      </h4> \
 		    </div> \
@@ -293,4 +314,42 @@ function addPlaces(id) {
 					    </div> \
 					  </div>';
 	$("#accordion").append(content);
+}
+
+function register() {
+	var json = {
+		"username" : $("#email").val(),
+		"password" : $("#password").val()
+	};
+	$.ajax({
+		type : "POST",
+		url : "/context/User/add/",
+		data : JSON.stringify(json),
+	}).done(function(msg) {
+		console.log("Data Saved: " + msg);
+		if (msg == "true") {
+			alert("Welcome to My Travel!");
+			window.location.replace("/map.html");
+
+		} else
+			alert("Register failed, please try another email!");
+	});
+}
+
+function login() {
+	var json = {
+		"username" : $("#email").val(),
+		"password" : $("#password").val()
+	};
+	$.ajax({
+		type : "GET",
+		url : "/context/User/login/" + JSON.stringify(json)
+	}).done(function(msg) {
+		console.log("Data Saved: " + msg);
+		if (msg == "true") {
+			alert("Welcome to My Travel!");
+			window.location.replace("/map.html");
+		} else
+			alert("Login failed, please try again!");
+	});
 }

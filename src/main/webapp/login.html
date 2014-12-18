@@ -11,32 +11,33 @@
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
 <link rel="stylesheet" href="css/index.css">
 <script src="https://code.jquery.com/jquery-2.1.1.js"></script>
+<script src="js/js.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 <title>My Travel</title>
 </head>
 
 <body>
-
 	<div class="container">
-	<H1>Welcome to My Travel</H1>
+		<H1>Welcome to My Travel</H1>
 
 		<form class="form-signin" role="form" action="/map.html">
 			<h2 class="form-signin-heading">Please sign in</h2>
 			<label for="inputEmail" class="sr-only">Email address</label> <input
-				type="email" id="inputEmail" class="form-control"
+				type="email" id="email" class="form-control"
 				placeholder="Email address" required autofocus> <label
 				for="inputPassword" class="sr-only">Password</label> <input
-				type="password" id="inputPassword" class="form-control"
+				type="password" id="password" class="form-control"
 				placeholder="Password" required>
 			<div class="checkbox">
 				<label> <input type="checkbox" value="remember-me">
 					Remember me
 				</label>
 			</div>
-			<button class="btn btn-lg btn-primary btn-block" type="submit">Sign
-				in</button>
+			<input onclick="login()" class="btn btn-lg btn-primary btn-block"
+				type="button" value="Sign in">
 		</form>
+		<a href="register.html">Register Here</a>
 
 	</div>
 	<!-- /container -->

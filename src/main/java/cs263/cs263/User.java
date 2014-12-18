@@ -23,7 +23,7 @@ import com.google.appengine.api.memcache.ErrorHandlers;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 
-public class User {
+public class User implements Cloneable {
 
 	public final static String NAME = "User";
 	public String username = "";
@@ -57,6 +57,10 @@ public class User {
 		return true;
 	}
 
+	protected Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+
 	public static User Get(String username) {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -66,21 +70,29 @@ public class User {
 		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 		syncCache.setErrorHandler(ErrorHandlers
 				.getConsistentLogAndContinue(Level.INFO));
-		User res = (User) syncCache.get(user); // read from cache
+		User res = (User) syncCache.get(username); // read from cache
 		if (res != null)
 			return res;
 
 		try {
 			if (datastore.get(user.getKey()) == null)
 				return null;
+			user = datastore.get(user.getKey());
 		} catch (EntityNotFoundException e) {
 			e.printStackTrace();
 			return null;
 		}
-		res = new User((String) (user.getProperties().get("username")),
-				(String) (user.getProperties().get("password")),
-				(String) (user.getProperties().get("email")));
-		syncCache.put(user, res);
+		res = new User((String) (user.getProperty("username")),
+				(String) (user.getProperty("password")),
+				(String) (user.getProperty("email")));
+		Object o = null;
+		try {
+			o = res.clone();
+			System.out.println(res.username + " -- " + res.password);
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return res;
 	}
 }
